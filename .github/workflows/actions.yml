@@ -40,6 +40,7 @@ jobs:
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter [github-actions[bot]]"
           git push
+          git pull
           git commit --amend -m "amend [github-actions[bot]]"
           git push
 
