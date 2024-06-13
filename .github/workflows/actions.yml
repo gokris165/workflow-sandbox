@@ -40,7 +40,7 @@ jobs:
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a --amend -m "Incremented counter [github-actions[bot]]"
           git config pull.rebase false
-          git pull
+          git pull --allow-unrelated-histories
           git push
 
   finish-workflow:
