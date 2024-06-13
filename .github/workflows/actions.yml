@@ -14,6 +14,7 @@ jobs:
 
   increment-counter:
     needs: [echo-hello-world]
+    if: github.action.commits[0].author.name != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
