@@ -28,12 +28,17 @@ jobs:
       - name: Print counter
         run: echo $(cat counter)
 
-      - name: Increment and push counter
+      - name: Increment counter
+        run: echo $(($(cat counter) + 1)) > counter
+
+      - name: Print updated counter
+        run: echo $(cat counter)
+
+      - name: Push Commit
         run: |
-          echo $(($(cat counter) + 1)) > counter
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@user.noreply.github.com'
-          git commit -a -m "Incremented counter"
+          git commit -a -m "Incremented counter [github-actions[bot]]"
           git push
 
   finish-workflow:
