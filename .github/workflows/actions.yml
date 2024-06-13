@@ -22,11 +22,11 @@ jobs:
 
       - name: Analylze current directory
         run: |
-          echo $(pwd)
-          echo $(ls)
+          echo pwd
+          echo ls
 
       - name: Print counter
-        run: echo $(cat counter)
+        run: echo cat counter
 
       # - name: Increment and push counter
       #   run: |
