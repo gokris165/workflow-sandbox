@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print counter
-        run: echo cat counter
+        run: echo $(cat counter)
 
       - name: Increment and push counter
         run: |
-          (cat counter) + 1 > counter
+          $($(cat counter) + 1) > counter
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter"
