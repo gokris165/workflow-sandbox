@@ -1,0 +1,49 @@
+name: Test workflow
+
+on:
+  pull_request:
+    branches: main
+
+jobs:
+  echo-hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print hello world
+        run: echo "hello world!"
+
+  increment-counter:
+    needs: [echo-hello-world]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Analylze current directory
+        run: |
+          echo $(pwd)
+          echo $(ls)
+
+      - name: Print counter
+        run: echo $(cat counter)
+
+      - name: Increment counter
+        run: echo $(($(cat counter) + 1)) > counter
+
+      - name: Print updated counter
+        run: echo $(cat counter)
+
+      - name: Push Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@user.noreply.github.com'
+          git commit -a -m "Incremented counter [github-actions[bot]]"
+          git push
+
+  finish-workflow:
+    needs: [increment-counter]
+    runs-on: ubuntu-latest
+    steps:
+      - name: print goodbye world
+        run: echo goodbye world
