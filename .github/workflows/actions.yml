@@ -15,8 +15,15 @@ jobs:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
     steps:
-      - name: PWD
-        run: echo $(pwd)
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Analylze current directory
+        run: |
+          echo $(pwd)
+          echo $(ls)
 
       - name: Print counter
         run: echo $(cat counter)
