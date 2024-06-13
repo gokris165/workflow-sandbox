@@ -12,6 +12,7 @@ jobs:
         run: echo "hello world!"
 
   increment-counter:
+    needs: [echo-hello-world]
     runs-on: ubuntu-latest
     steps:
       - name: Print counter
@@ -26,6 +27,7 @@ jobs:
           git push
 
   finish-workflow:
+    needs: [increment-counter]
     runs-on: ubuntu-latest
     steps:
       - name: print goodbye world
