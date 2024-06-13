@@ -15,6 +15,9 @@ jobs:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
     steps:
+      - name: PWD
+        run: echo pwd
+
       - name: Print counter
         run: echo $(cat counter)
 
