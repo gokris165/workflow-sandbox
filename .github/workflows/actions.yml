@@ -25,7 +25,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: a
-        run: echo ${{ env.AUTHOR }}
+        run: echo "${{ env.AUTHOR }}"
 
       - name: Check commit author
         run: |
@@ -38,7 +38,7 @@ jobs:
         run: echo AUTHOR="samuel gamgee"
 
       - name: d
-        run: echo ${{ env.AUTHOR }}
+        run: echo "${{ env.AUTHOR }}"
 
   increment-counter:
     needs: [check-commit-author]
