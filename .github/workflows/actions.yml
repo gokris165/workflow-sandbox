@@ -3,7 +3,6 @@ name: Test workflow
 on:
   pull_request:
     branches: main
-  workflow_dispatch:
 
 jobs:
   echo-hello-world:
@@ -31,10 +30,13 @@ jobs:
       - name: Print previous commit author
         run: echo "Previous ${{ steps.check.outputs.author }}"
 
+      - name: Get workflow actor username
+        run: echo "${{ github.actor }}"
+
   increment-counter:
     needs: check-commit-author
     runs-on: ubuntu-latest
-    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'Gokul') }}
+    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'github-actions[bot]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -53,11 +55,11 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter [github-actions[bot]]"
-          # git push
+          git push
 
   finish-workflow:
     needs: increment-counter
     runs-on: ubuntu-latest
     steps:
       - name: print goodbye world
-        run: echo goodbye world
+        run: echo "goodbye world"
