@@ -24,20 +24,20 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: a
-        run: ${{ env.AUTHOR }}
+        run: echo ${{ env.AUTHOR }}
 
       - name: Check commit author
         run: |
           echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
 
       - name: b
-        run: ${{ env.AUTHOR }}
+        run: echo ${{ env.AUTHOR }}
 
       - name: c
         run: echo AUTHOR=gokul >> $GITHUB_ENV
 
       - name: d
-        run: ${{ env.AUTHOR }}
+        run: echo ${{ env.AUTHOR }}
 
   increment-counter:
     needs: [check-commit-author]
