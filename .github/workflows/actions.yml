@@ -15,6 +15,8 @@ jobs:
   check-commit-author:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
+    env:
+      AUTHOR: temp
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,6 +38,16 @@ jobs:
       - name: check all available vars
         run: env
 
+      - name: try changing variable
+        run: $AUTHOR=gokul
+
+      - name: read variable
+        run: |
+          echo $(AUTHOR)
+          echo AUTHOR
+          echo ${{ github.job.env }}
+          env
+
   increment-counter:
     needs: [check-commit-author]
     runs-on: ubuntu-latest
@@ -53,6 +65,7 @@ jobs:
           echo $(ls)
           echo $(AUTHOR)
           echo ${{ github.env.AUTHOR }}
+          env
 
       - name: Print counter
         run: echo $(cat counter)
