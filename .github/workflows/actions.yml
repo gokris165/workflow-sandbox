@@ -31,7 +31,8 @@ jobs:
           echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
 
       - name: b
-        run: echo ${{ env.AUTHOR }}
+        run: |
+          echo "${{ env.AUTHOR }}"
 
       - name: c
         run: echo AUTHOR=gokul >> $GITHUB_ENV
