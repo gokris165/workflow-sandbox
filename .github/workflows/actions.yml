@@ -13,7 +13,7 @@ jobs:
         run: echo "hello world!"
 
   check-commit-author:
-    needs: [echo-hello-world]
+    needs: echo-hello-world
     runs-on: ubuntu-latest
     outputs:
       bass: ${{ steps.check.outputs.author }}
@@ -25,12 +25,12 @@ jobs:
 
       - name: Get previous commit author
         id: check
-        run: echo "author=$(git show -s | grep AUTHOR)" >> "$GITHUB_OUTPUT"
+        run: echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
 
   increment-counter:
-    needs: [check-commit-author]
+    needs: check-commit-author
     runs-on: ubuntu-latest
-    if: ${{ ! contains(needs.check-commit-author.outputs.bass, 'Gokul') }}
+    if: ${{ ! contains(needs.check-commit-author.outputs.bass, 'asdf') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
