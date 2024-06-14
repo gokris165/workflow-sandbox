@@ -26,6 +26,9 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
+          echo ${{ github.action.commits[0].author.name }}
+          echo ${{ github.event.pull_request.head.sha }}
+          echo $(git show -s)
 
       - name: Print counter
         run: echo $(cat counter)
