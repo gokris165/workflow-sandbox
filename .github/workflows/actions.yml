@@ -5,9 +5,6 @@ on:
     branches: main
   workflow_dispatch:
 
-env:
-  AUTHOR: temp
-
 jobs:
   echo-hello-world:
     runs-on: ubuntu-latest
@@ -18,32 +15,22 @@ jobs:
   check-commit-author:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
+    outputs:
+      author: ${{ steps.check.outputs.author }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: a
-        run: echo "${{ env.AUTHOR }}"
-
-      - name: Check commit author
-        run: |
-          echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
-
-      - name: bc
-        run: echo "${{ env.AUTHOR }}"
-
-      - name: c
-        run: echo AUTHOR="samuel gamgee"
-
-      - name: d
-        run: echo "${{ env.AUTHOR }}"
+      - name: Get previous commit author
+        id: check
+        run: echo $(git show -s | grep AUTHOR) >> $GITHUB_OUTPUT
 
   increment-counter:
     needs: [check-commit-author]
     runs-on: ubuntu-latest
-    if: ${{ ! contains(github.env.AUTHOR, 'github-actions[bot]') }}
+    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'github-actions[bot]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,10 +42,7 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
-          echo $(AUTHOR)
-          echo ${{ github.env.AUTHOR }}
-          env
-          echo "the goat ${{ env.AUTHOR }}"
+          echo "the goat ${{ needs.check-commit-author.outputs.author }}"
 
       - name: Print counter
         run: echo $(cat counter)
