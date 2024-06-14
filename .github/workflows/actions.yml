@@ -27,7 +27,9 @@ jobs:
         id: check
         run: |
           echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
-          echo "$author"
+
+      - name: Print previous commit author
+        run: echo "Previous ${{ steps.check.outputs.author }}"
 
   increment-counter:
     needs: check-commit-author
