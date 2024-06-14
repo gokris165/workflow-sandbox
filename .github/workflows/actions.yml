@@ -23,34 +23,21 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: a
+        run: ${{ env.AUTHOR }}
+
       - name: Check commit author
         run: |
           echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
 
-      - name: Check variable
-        run: |
-          echo $(AUTHOR)
-          echo AUTHOR
-          echo ${{ github.env.AUTHOR }}
+      - name: b
+        run: ${{ env.AUTHOR }}
 
-      - name: check all available vars
-        run: env
+      - name: c
+        run: echo AUTHOR=gokul >> $GITHUB_ENV
 
-      - name: try changing variable
-        run: |
-          AUTHOR=gokul
-          ${{ env.AUTHOR }} = yomama
-          ${{ env.AUTHOR }}
-          AUTHOR
-          echo AUTHOR
-          echo $(AUTHOR)
-
-      - name: read variable
-        run: |
-          echo $(AUTHOR)
-          echo AUTHOR
-          echo ${{ github.job.env }}
-          env
+      - name: d
+        run: ${{ env.AUTHOR }}
 
   increment-counter:
     needs: [check-commit-author]
