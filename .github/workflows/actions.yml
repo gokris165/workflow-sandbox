@@ -31,7 +31,7 @@ jobs:
         run: |
           echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
 
-      - name: b
+      - name: bc
         run: echo ${{ env.AUTHOR }}
 
       - name: c
