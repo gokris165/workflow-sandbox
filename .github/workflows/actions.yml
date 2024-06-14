@@ -26,8 +26,6 @@ jobs:
       - name: Check commit author
         run: |
           echo AUTHOR=$(git show -s | grep Author) >> $GITHUB_ENV
-          echo $(AUTHOR)
-          echo AUTHOR
 
       - name: Check variable
         run: |
@@ -41,8 +39,11 @@ jobs:
       - name: try changing variable
         run: |
           AUTHOR=gokul
-          env.AUTHOR = yomama
-          ${{ env.AUTHOR}}
+          ${{ env.AUTHOR }} = yomama
+          ${{ env.AUTHOR }}
+          AUTHOR
+          echo AUTHOR
+          echo $(AUTHOR)
 
       - name: read variable
         run: |
