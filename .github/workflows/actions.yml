@@ -12,15 +12,27 @@ jobs:
       - name: Print hello world
         run: echo "hello world!"
 
-  increment-counter:
+  check-previous-commit:
     needs: [echo-hello-world]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Check previous commit message
+        run: echo $(git show -s | grep Author)
+
+  increment-counter:
+    needs: [check-previous-commit]
     if: github.action.commits[0].author.name != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Analylze current directory
         run: |
