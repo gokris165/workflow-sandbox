@@ -25,7 +25,9 @@ jobs:
 
       - name: Get previous commit author
         id: check
-        run: echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
+        run: |
+          echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
+          echo "$author"
 
   increment-counter:
     needs: check-commit-author
