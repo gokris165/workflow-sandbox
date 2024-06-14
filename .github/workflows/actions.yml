@@ -12,9 +12,23 @@ jobs:
       - name: Print hello world
         run: echo "hello world!"
 
-  increment-counter:
+  check-commit-author:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Check commit author
+        run: |
+          echo $(AUTHOR=$(git show -s | grep Author)) >> $GITHUB_ENV
+
+  increment-counter:
+    needs: [check-commit-author]
+    runs-on: ubuntu-latest
+    if: ${{ ! contains(github.env.AUTHOR, 'github-actions[bot]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,7 +40,7 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
-          echo $(git show -s | grep Author)
+          echo $(AUTHOR)
 
       - name: Print counter
         run: echo $(cat counter)
@@ -43,11 +57,6 @@ jobs:
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter [github-actions[bot]]"
           git push
-
-      # - name: Push Commit
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.AUTO_INC }}
 
   finish-workflow:
     needs: [increment-counter]
