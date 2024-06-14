@@ -39,7 +39,10 @@ jobs:
         run: env
 
       - name: try changing variable
-        run: AUTHOR=gokul
+        run: |
+          AUTHOR=gokul
+          env.AUTHOR = yomama
+          ${{ env.AUTHOR}}
 
       - name: read variable
         run: |
