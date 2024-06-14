@@ -16,7 +16,7 @@ jobs:
     needs: echo-hello-world
     runs-on: ubuntu-latest
     outputs:
-      bass: ${{ steps.check.outputs.author }}
+      author: ${{ steps.check.outputs.author }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,28 +30,19 @@ jobs:
   increment-counter:
     needs: check-commit-author
     runs-on: ubuntu-latest
-    if: ${{ ! contains(needs.check-commit-author.outputs.bass, 'asdf') }}
+    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'Gokul') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Analylze current directory
-        run: |
-          echo $(pwd)
-          echo $(ls)
-          echo "the goat ${{ needs.check-commit-author.outputs.bass }}"
-
-      - name: Print counter
-        run: echo $(cat counter)
+          token: ${{ secrets.AUTO_INC }}
 
       - name: Increment counter
-        run: echo $(($(cat counter) + 1)) > counter
-
-      - name: Print updated counter
-        run: echo $(cat counter)
+        run: |
+          echo $(cat counter)
+          echo $(($(cat counter) + 1)) > counter
+          echo $(cat counter)
 
       - name: Create Commit
         run: |
@@ -61,7 +52,7 @@ jobs:
           # git push
 
   finish-workflow:
-    needs: [increment-counter]
+    needs: increment-counter
     runs-on: ubuntu-latest
     steps:
       - name: print goodbye world

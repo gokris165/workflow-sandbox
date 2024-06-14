@@ -22,7 +22,6 @@ token will not trigger other workflows to run.
 Here are possible workarounds for this issue:
 
 1. Disable branch protection rules / required checks
-2. Add functionality to run the workflows manually
-3. Use a Personal Access Token (PAT) [Recommended solution by Github]
-4. Create a Github App with the necessary permissions and add it to the
-   bypass list for the specific branch protection rule
+2. ~~Add functionality to run the workflows manually~~ **(DOES NOT WORK)**
+3. Use a Personal Access Token (PAT) **(RECOMMENDED BY GITHUB)**
+4. Create a Github App with the necessary permissions
