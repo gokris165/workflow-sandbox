@@ -12,39 +12,51 @@ jobs:
       - name: Print hello world
         run: echo "hello world!"
 
-  increment-counter:
-    needs: [echo-hello-world]
-    if: github.action.commits[0].author.name != 'github-actions[bot]'
+  check-commit-author:
+    needs: echo-hello-world
     runs-on: ubuntu-latest
+    outputs:
+      author: ${{ steps.check.outputs.author }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Analylze current directory
+      - name: Get previous commit author
+        id: check
         run: |
-          echo $(pwd)
-          echo $(ls)
+          echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
 
-      - name: Print counter
-        run: echo $(cat counter)
+      - name: Print previous commit author
+        run: echo "Previous ${{ steps.check.outputs.author }}"
+
+  increment-counter:
+    needs: check-commit-author
+    runs-on: ubuntu-latest
+    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'Gokul') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.AUTO_INC }}
 
       - name: Increment counter
-        run: echo $(($(cat counter) + 1)) > counter
+        run: |
+          echo $(cat counter)
+          echo $(($(cat counter) + 1)) > counter
+          echo $(cat counter)
 
-      - name: Print updated counter
-        run: echo $(cat counter)
-
-      - name: Push Commit
+      - name: Create Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter [github-actions[bot]]"
-          git push
+          # git push
 
   finish-workflow:
-    needs: [increment-counter]
+    needs: increment-counter
     runs-on: ubuntu-latest
     steps:
       - name: print goodbye world
