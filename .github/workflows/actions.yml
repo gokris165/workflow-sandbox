@@ -14,8 +14,11 @@ jobs:
   check-commit-author:
     needs: echo-hello-world
     runs-on: ubuntu-latest
+
+    # This is how you set up output mapping
     outputs:
-      author: ${{ steps.check.outputs.author }}
+      commit-author: ${{ steps.check.outputs.author }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,9 +26,14 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Get previous commit author
+
+        # The 'id' field is needed to map the outputs properly
+        # The 'id' is how you identify which step the output is coming from
         id: check
-        run: |
-          echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
+
+        # The key 'author' needs to match the output name mentioned
+        # in the outputs map earlier (steps.check.outputs."author")
+        run: echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
 
       - name: Print previous commit author
         run: echo "Previous ${{ steps.check.outputs.author }}"
@@ -36,13 +44,18 @@ jobs:
   increment-counter:
     needs: check-commit-author
     runs-on: ubuntu-latest
-    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'github-actions[bot]') }}
+
+    # Run this job based on what's in the commit-author output variable
+    if: ${{ ! contains(needs.check-commit-author.outputs.commit-author, 'github-actions[bot]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.AUTO_INC }}
+
+          # You have to specify your Personal Access Token (PAT) here!
+          # AUTO_INC is the name of my PAT, accessed via 'secrets' global variable
+          token: ${{ secrets.NO_PERMS }}
 
       - name: Increment counter
         run: |
