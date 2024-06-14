@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.AUTO_INC }}
 
       - name: Analylze current directory
         run: |
@@ -41,11 +42,12 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@user.noreply.github.com'
           git commit -a -m "Incremented counter [github-actions[bot]]"
+          git push
 
-      - name: Push Commit
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.AUTO_INC }}
+      # - name: Push Commit
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.AUTO_INC }}
 
   finish-workflow:
     needs: [increment-counter]
