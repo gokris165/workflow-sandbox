@@ -16,7 +16,7 @@ jobs:
     needs: [echo-hello-world]
     runs-on: ubuntu-latest
     outputs:
-      author: ${{ steps.check.outputs.author }}
+      bass: ${{ steps.check.outputs.author }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
   increment-counter:
     needs: [check-commit-author]
     runs-on: ubuntu-latest
-    if: ${{ ! contains(needs.check-commit-author.outputs.author, 'Gokul') }}
+    if: ${{ ! contains(needs.check-commit-author.outputs.bass, 'Gokul') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
-          echo "the goat ${{ needs.check-commit-author.outputs.author }}"
+          echo "the goat ${{ needs.check-commit-author.outputs.bass }}"
 
       - name: Print counter
         run: echo $(cat counter)
