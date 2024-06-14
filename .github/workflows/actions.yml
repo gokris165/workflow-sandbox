@@ -15,7 +15,7 @@ jobs:
     needs: echo-hello-world
     runs-on: ubuntu-latest
 
-    # This is how you set up output mapping
+    # Declaring 'commit-author' as the output variable for this job
     outputs:
       commit-author: ${{ steps.check.outputs.author }}
 
@@ -31,8 +31,10 @@ jobs:
         # The 'id' is how you identify which step the output is coming from
         id: check
 
-        # The key 'author' needs to match the output name mentioned
-        # in the outputs map earlier (steps.check.outputs."author")
+        # Syntax for setting output variable:
+        #   echo "{key}={value}" >> $GITHUB_OUTPUT
+        # Note: the 'key' name should match the output declaration
+        # Here, the key 'author' matches steps.check.outputs.""author""
         run: echo "author=$(git show -s | grep Author)" >> $GITHUB_OUTPUT
 
       - name: Print previous commit author
@@ -55,7 +57,7 @@ jobs:
 
           # You have to specify your Personal Access Token (PAT) here!
           # AUTO_INC is the name of my PAT, accessed via 'secrets' global variable
-          token: ${{ secrets.NO_PERMS }}
+          token: ${{ secrets.AUTO_INC }}
 
       - name: Increment counter
         run: |
